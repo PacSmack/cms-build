@@ -48,4 +48,4 @@ VALUES
     ('Ann', 'Brown', 8, 3),
     ('Jane', 'Smith', 8, 3),
     ('Margaret', 'Rocha', 9, 3),
-    ('Tamara', 'Rego', 9, 3);
+    ('Tamara', 'Rego', 9, 3);   
