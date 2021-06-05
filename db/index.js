@@ -73,6 +73,65 @@ class DB {
                 }
             )
         })
+    };
+    async addNewEmployee() {
+        const rolesArr = [];
+        function selectRole() {
+            connection.query("SELECT * FROM roles", (err, res) => {
+                if (err) throw err
+                for (let i = 0; i < res.length; i++) {
+                    rolesArr.push(res[i].job_title);
+                }
+            })
+            return rolesArr
+        }
+
+        const managersArr = [];
+        function selectManager() {
+            connection.query("SELECT first_name, last_name FROM employees WHERE id IN (1, 2, 3)", (err, res) => {
+                if (err) throw err
+                for (let i = 0; i < res.length; i++) {
+                    managersArr.push(res[i].first_name);
+                }
+            })
+            return managersArr
+        }
+        return inquirer.prompt([
+            {
+                name: "firstName",
+                type: "input",
+                message: "What is the employee first name?"
+            },
+            {
+                name: "lastName",
+                type: "input",
+                message: "What is the employee last name?"
+            },
+            {
+                name: "role",
+                type: "list",
+                message: "What's the new employee's role?",
+                choices: selectRole()
+            },
+            {
+                name: "manager",
+                type: "rawlist",
+                message: "Who's the manager he/she reports to?",
+                choices: selectManager()
+            }
+        ]).then(newEmployee => {
+            const rolesId = selectRole().indexOf(newEmployee.role) + 1
+            const managerId = selectManager().indexOf(newEmployee.manager) + 1
+            connection.query(
+                "INSERT INTO employees SET ?",
+                {
+                    first_name: newEmployee.firstName,
+                    last_name: newEmployee.lastName,
+                    manager_id: managerId,
+                    job_title_id: rolesId
+                }
+            )
+        })
     }
 };
 
