@@ -132,8 +132,54 @@ class DB {
                 }
             )
         })
+    };
+    async updatedEmployee() {
+        const rolesArr = [];
+        function selectRole() {
+            connection.query("SELECT * FROM roles", (err, res) => {
+                if (err) throw err
+                for (let i = 0; i < res.length; i++) {
+                    rolesArr.push(res[i].job_title);
+                }
+            })
+            return rolesArr
+        }
+        connection.query("SELECT employees.first_name, roles.job_title FROM employees JOIN roles ON employees.job_title_id = roles.id", (err, res) => {
+            if (err) throw err
+            return inquirer.prompt([
+                {
+                    name: "firstName",
+                    type: "rawlist",                    
+                    choices: function () {
+                        const firstName = [];
+                        for (let i = 0; i < res.length; i++) {
+                            firstName.push(res[i].first_name)
+                        }
+                        return firstName;
+                    },
+                    message: "What's your employee's name?"
+                },
+                {
+                    name: "role",
+                    type: "rawlist",
+                    message: "What is the Employee's new role?",
+                    choices: selectRole()
+                }
+            ]).then(updatedStaff => {
+                const rolesId = selectRole().indexOf(updatedStaff.role) + 1
+                connection.query("UPDATE employees SET WHERE ?"),
+                {
+                    first_name: updatedStaff.firstName,                    
+                },     
+                {
+                    job_title_id: rolesId
+                }           
+            })
+        })
     }
-};
+}
+
+
 
 
 

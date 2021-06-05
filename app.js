@@ -10,7 +10,7 @@ async function mainMenu() {
             type: 'list',
             name: 'mainMenu',
             message: 'What would you like to do?',
-            choices: [{ name: 'View all departments', value: "VIEW_ALL_DEPARTMENTS" }, { name: 'View all roles', value: "VIEW_ALL_ROLES" }, { name: 'View all employees', value: "VIEW_ALL_EMPLOYEES" }, { name: 'Add a department', value: "ADD_DEPARTMENT" }, {name:'Add a role', value: "ADD_ROLE"}, {name:'Add an employee', value: "ADD_EMPLOYEE"}, 'Update an employee role']
+            choices: [{ name: 'View all departments', value: "VIEW_ALL_DEPARTMENTS" }, { name: 'View all roles', value: "VIEW_ALL_ROLES" }, { name: 'View all employees', value: "VIEW_ALL_EMPLOYEES" }, { name: 'Add a department', value: "ADD_DEPARTMENT" }, {name:'Add a role', value: "ADD_ROLE"}, {name:'Add an employee', value: "ADD_EMPLOYEE"}, {name:'Update an employee role', value:"UPDATE_EMLPOYEE"}]
         }
     ])
     switch (choice.mainMenu) {
@@ -26,9 +26,8 @@ async function mainMenu() {
             return addRole();
         case "ADD_EMPLOYEE":
             return addEmployee();
-
-        case 10:
-
+        case "UPDATE_EMLPOYEE":
+            return updateEmployee();
     }
 }
 
@@ -74,7 +73,12 @@ async function addEmployee() {
     mainMenu()
 };
 
-
+async function updateEmployee() {
+    const updatedEmployee = await db.updatedEmployee();
+    console.log("\n")
+    console.table(updatedEmployee)
+    mainMenu()
+};
 
 
 mainMenu()
