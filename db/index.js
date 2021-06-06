@@ -133,54 +133,48 @@ class DB {
             )
         })
     };
+
     async updatedEmployee() {
-        const rolesArr = [];
-        function selectRole() {
-            connection.query("SELECT * FROM roles", (err, res) => {
-                if (err) throw err
-                for (let i = 0; i < res.length; i++) {
-                    rolesArr.push(res[i].job_title);
-                }
-            })
-            return rolesArr
-        }
-        connection.query("SELECT employees.first_name, roles.job_title FROM employees JOIN roles ON employees.job_title_id = roles.id", (err, res) => {
-            if (err) throw err
-            return inquirer.prompt([
-                {
-                    name: "firstName",
-                    type: "rawlist",                    
-                    choices: function () {
-                        const firstName = [];
-                        for (let i = 0; i < res.length; i++) {
-                            firstName.push(res[i].first_name)
-                        }
-                        return firstName;
-                    },
-                    message: "What's your employee's name?"
+        const [roleRows] = await connection.promise().query("SELECT * FROM roles");
+        const [employeeRows] = await connection.promise().query("SELECT * FROM employees");
+        const answers = await inquirer.prompt([
+            {
+                name: "employeeId",
+                type: "rawlist",
+                choices: function () {
+                    const firstName = [];
+                    for (let i = 0; i < employeeRows.length; i++) {
+                        firstName.push({ name: employeeRows[i].first_name, value: employeeRows[i].id })
+                    }
+                    return firstName;
                 },
-                {
-                    name: "role",
-                    type: "rawlist",
-                    message: "What is the Employee's new role?",
-                    choices: selectRole()
+                message: "What's your employee's name?"
+            },
+            {
+                name: "roleId",
+                type: "rawlist",
+                message: "What is the Employee's new role?",
+                choices: function () {
+                    const rolesArr = [];
+                    for (let i = 0; i < roleRows.length; i++) {
+                        rolesArr.push({ name: roleRows[i].job_title, value: roleRows[i].id });
+                    }
+                    return rolesArr
                 }
-            ]).then(updatedStaff => {
-                const rolesId = selectRole().indexOf(updatedStaff.role) + 1
-                connection.query("UPDATE employees SET WHERE ?"),
-                {
-                    first_name: updatedStaff.firstName,                    
-                },     
-                {
-                    job_title_id: rolesId
-                }           
-            })
-        })
+            }
+        ]);
+
+        const [updatedEmployees] = await connection.promise().query("UPDATE employees SET ? WHERE ?",
+            [{
+                job_title_id: answers.roleId,
+            },
+            {
+                id: answers.eployeeId
+            }]
+        );
+        return updatedEmployees        
     }
-}
-
-
-
+};
 
 
 module.exports = new DB();
