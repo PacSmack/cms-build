@@ -7,4 +7,4 @@
 Link to walkthrough video
 
 
-![video]https://drive.google.com/file/d/1Ng1WZh_cZcVr8sVUC1joFQqndzUB5CZf/view
+https://drive.google.com/file/d/1Ng1WZh_cZcVr8sVUC1joFQqndzUB5CZf/view
