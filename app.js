@@ -10,7 +10,7 @@ async function mainMenu() {
             type: 'list',
             name: 'mainMenu',
             message: 'What would you like to do?',
-            choices: [{ name: 'View all departments', value: "VIEW_ALL_DEPARTMENTS" }, { name: 'View all roles', value: "VIEW_ALL_ROLES" }, { name: 'View all employees', value: "VIEW_ALL_EMPLOYEES" }, { name: 'Add a department', value: "ADD_DEPARTMENT" }, { name: 'Add a role', value: "ADD_ROLE" }, { name: 'Add an employee', value: "ADD_EMPLOYEE" }, { name: 'Update an employee role', value: "UPDATE_EMLPOYEE" }, { name: "Exit", Value: "EXIT" }]
+            choices: [{ name: 'View all departments', value: "VIEW_ALL_DEPARTMENTS" }, { name: 'View all roles', value: "VIEW_ALL_ROLES" }, { name: 'View all employees', value: "VIEW_ALL_EMPLOYEES" }, { name: 'Add a department', value: "ADD_DEPARTMENT" }, { name: 'Add a role', value: "ADD_ROLE" }, { name: 'Add an employee', value: "ADD_EMPLOYEE" }, { name: 'Update an employee role', value: "UPDATE_EMLPOYEE" }]
         }
     ])
     switch (choice.mainMenu) {
@@ -50,30 +50,23 @@ async function viewEmployees() {
 };
 
 async function addDepartment() {
-    const newDepartment = await db.addNewDepartment();
-    console.table(newDepartment)
+    const newDepartment = await db.addNewDepartment();    
     mainMenu()
 };
 
 async function addRole() {
-    const newRole = await db.addNewRole();
-    console.table(newRole)
+    const newRole = await db.addNewRole();    
     mainMenu()
 };
 
 async function addEmployee() {
-    const newEmployee = await db.addNewEmployee();
-    console.table(newEmployee)
+    const newEmployee = await db.addNewEmployee();    
     mainMenu()
 };
 
 async function updateEmployee() {
-    const updatedEmployee = await db.updatedEmployee();
-    console.table(updatedEmployee)
+    const updatedEmployee = await db.updatedEmployee();    
     mainMenu()
 };
-
-
-
 
 mainMenu()

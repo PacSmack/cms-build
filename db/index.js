@@ -46,7 +46,8 @@ class DB {
         })
     };
     async addNewRole() {
-        return inquirer.prompt([
+        const [departmentRows] = await connection.promise().query("SELECT * FROM departments");
+        const answers = await inquirer.prompt([
             {
                 name: "name",
                 type: "input",
@@ -59,20 +60,27 @@ class DB {
             },
             {
                 name: "department",
-                type: "input",
-                message: "Which department does this role belongs to?"
-            }
-
-        ]).then(newRole => {
-            connection.query(
-                "INSERT INTO roles SET ?",
-                {
-                    job_title: newRole.name,
-                    salary: newRole.salary,
-                    department_id: newRole.department
+                type: "rawlist",
+                message: "Which department does this role belongs to?",
+                choices: function () {
+                    const departmentArr = [];
+                    for (let i = 0; i < departmentRows.length; i++) {
+                        departmentArr.push({ name: departmentRows[i].department_name, value: departmentRows[i].id })
+                    }
+                    return departmentArr;
                 }
-            )
-        })
+            }
+        ])
+
+        const [newRole] = await connection.promise().query("INSERT INTO roles SET ?",
+            [{
+                job_title: answers.name,
+                salary: answers.salary,
+                department_id: answers.department
+            }]
+            
+        )    
+        return newRole    
     };
     async addNewEmployee() {
         const rolesArr = [];
@@ -169,10 +177,10 @@ class DB {
                 job_title_id: answers.roleId,
             },
             {
-                id: answers.eployeeId
+                id: answers.employeeId
             }]
         );
-        return updatedEmployees        
+        return updatedEmployees
     }
 };
 
